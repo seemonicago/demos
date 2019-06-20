@@ -1,0 +1,42 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nasa
+  labels:
+    rover: curiosity
+
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: rover-deployment
+  namespace: nasa
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        rover: curiosity
+    spec:
+      containers:
+      - image: nginx:1.7.9
+        name: nginx
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    rover: curiosity
+  name: radio
+  namespace: nasa
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    rover: curiosity
+  type: NodePort
