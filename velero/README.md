@@ -1,9 +1,9 @@
-## About
+# Velero demo instructions
 
-This is a walk-through of a local kubernetes cluster backup and restore using [Velero](https://github.com/heptio/velero) 
+This is a walk-through of a local Kubernetes cluster backup and restore using [Velero](https://velero.io).
 
-Tasks:
-a) Backup and restore within a single cluster.
+Tasks:  
+a) Backup and restore within a single cluster  
 b) Migration: Backup in one cluster and restore in a separate cluster.
 
 This is based on Velero's [quick start guide](https://velero.io/docs/v1.0.0/get-started)
@@ -12,17 +12,17 @@ Time to complete: ~15 minutes (If prequisities have already been installed).
 
 ### References
 
-[Velero Docs](https://velero.io/docs/v1.0.0/about/)
+[Velero Docs](https://velero.io/docs)
 
-### Talking Points
+### Talking Points for presneting this at an event
 
- - What is it?
+ - What is Velero?
  - How does it work?
- - What are the limitations?
+ - What are the benefits and limitations?
 
 ## Demo
 
-> Note: These instructions were build for OSX.
+> Note: These instructions are for OSX.
 
 ### Prerequisites
 
@@ -37,28 +37,24 @@ Two separate minikube clusters are required.
 Use the profile option to name each cluster uniquely.
 For this demo, the clusters are named 'earth' and 'mars'
 
-1. Create minikube cluster 'earth'
+1. Create cluster "earth"
    `minikube start -p earth`
 
-2. Create minikube cluster 'mars'
+2. Create cluster "mars"
    `minikube start -p mars`
 
-3. Enable ingress on the 'earth' cluster
+3. Enable ingress on cluster "earth"
   `minikube addons enable ingress -p earth`
 
 > Note: To switch between clusters, use the following command:
   `kubectl config use-context ${PROFILE_NAME}`
 
+### Install Minio
+Velero requires an object store prior to installation.
 
-### Installation
-
-1. On the 'earth' cluster, set cluster to 'earth' 
+1. Set `kubectl` to use cluster "earth"
 
    `kubectl config use-context earth`
-
-
-#### Install Minio
-Velero requires an object store prior to installation.
 
 2. Create credentials file
 ```
@@ -94,13 +90,13 @@ export PUBLIC_URL=$(minikube service minio --namespace=velero --url -p earth)
 echo $PUBLIC_URL
 ```
 
-8. Open minio in browser
+8. Open minio in browser using the URL is the previous step
 
 
-#### Install Velero
+### Install Velero
 Now that minio is running, velero can be installed.
 
-1. Run install command for 'earth' cluster
+1. Run install command for cluster "earth"
 
 ```
 velero install \
@@ -124,7 +120,7 @@ velero get restores
 velero help
 ```
 
-### Single Cluster Backup & Restore
+### Demo 1: Single Cluster Backup & Restore
 Deploy a basic nginx app with a few resources, create a backup, delete the deployment, and restore from backup.
 
 #### Deploy an app
@@ -199,11 +195,11 @@ kubectl get namespace/nasa
 13. Show minio in browser
 
 
-### Cluster Migration
+### Demo 2: Cluster Migration
 
 Now, we'll demonstrate a cluster migration, or using a backup from one cluster to restore it to another cluster.
-To do this, we need to deploy velero in the 'mars' cluster points to minio in the 'earth' cluster.
-Note that there will be no minio object storage running in the 'mars' cluster.
+To do this, we need to deploy velero in the "mars" cluster points to minio in the "earth" cluster.
+Note that there will be no minio object storage running in the "mars" cluster.
 
 1. Set context to 'mars' cluster
 ```
